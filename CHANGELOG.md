@@ -1,4 +1,33 @@
 
+<a name="v0.13.1"></a>
+## [v0.13.1](https://github.com/YuYingRay/pomotroid2026/releases/tag/v0.13.1)
+
+> 2026-02-04
+
+### Features
+
+* 🌐 Add Chinese (Simplified) language support
+* Add language switcher in titlebar
+* Add first-launch language selection modal
+* Internationalize all UI text including tray menu and theme names
+* 🎉 Add celebration effects on focus completion (confetti, fireworks, stars)
+* Configurable celebration trigger, duration, and style
+* Celebration works even when minimized to system tray
+
+### Bug Fixes
+
+* Fix celebration effect not showing when app is minimized to tray
+* Fix click and ESC key to close celebration window
+* Add Object.hasOwn polyfill for Electron 11 compatibility
+
+### Chores
+
+* Add vue-i18n for internationalization
+* Add canvas-confetti for celebration effects
+* Bundle confetti.browser.js locally
+
+---
+
 <a name="v0.13.0"></a>
 ## [v0.13.0](https://github.com/Splode/pomotroid/compare/v0.12.0...v0.13.0)
 
