@@ -158,11 +158,13 @@ ipcMain.on('close-celebration', () => {
 function createCelebrationWindow(options) {
   const { duration, style } = options
   const primaryDisplay = screen.getPrimaryDisplay()
-  const { width, height } = primaryDisplay.workAreaSize
+  const { width, height } = primaryDisplay.bounds
 
-  const preloadPath = process.env.NODE_ENV === 'development'
-    ? path.join(__dirname, 'celebration-preload.js')
-    : path.join(__dirname, 'celebration-preload.js')
+  // Close existing celebration window if any
+  if (celebrationWindow) {
+    celebrationWindow.close()
+    celebrationWindow = null
+  }
 
   celebrationWindow = new BrowserWindow({
     width: width,
@@ -170,15 +172,16 @@ function createCelebrationWindow(options) {
     x: 0,
     y: 0,
     frame: false,
-    transparent: true,
+    transparent: false,
+    backgroundColor: '#00000050',
     alwaysOnTop: true,
     skipTaskbar: true,
     resizable: false,
     focusable: true,
+    fullscreen: true,
     webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: false,
-      preload: preloadPath
+      nodeIntegration: true,
+      contextIsolation: false
     }
   })
 
@@ -189,6 +192,14 @@ function createCelebrationWindow(options) {
   celebrationWindow.loadURL(celebrationURL)
   celebrationWindow.setIgnoreMouseEvents(false)
   celebrationWindow.focus()
+
+  // Auto close after duration + buffer time
+  setTimeout(() => {
+    if (celebrationWindow) {
+      celebrationWindow.close()
+      celebrationWindow = null
+    }
+  }, (duration + 1) * 1000)
 
   celebrationWindow.on('closed', () => {
     celebrationWindow = null

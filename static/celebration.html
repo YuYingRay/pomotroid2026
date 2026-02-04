@@ -2,7 +2,6 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net">
   <title>Celebration</title>
   <style>
     * {
@@ -13,7 +12,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: transparent !important;
+      background: #1a1a2e !important;
       cursor: pointer;
     }
     #click-overlay {
@@ -23,14 +22,30 @@
       top: 0;
       left: 0;
       z-index: 9999;
-      background: rgba(0, 0, 0, 0.001);
+    }
+    .close-hint {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 16px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 12px 24px;
+      border-radius: 30px;
+      z-index: 10000;
+      font-weight: 500;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
   </style>
 </head>
 <body>
   <div id="click-overlay"></div>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <div class="close-hint">Click or press ESC to close</div>
+  <script src="./confetti.browser.js"></script>
   <script>
+    const { ipcRenderer } = require('electron')
+
     // Get celebration options from query params
     const urlParams = new URLSearchParams(window.location.search)
     const duration = parseInt(urlParams.get('duration')) || 5
@@ -39,11 +54,9 @@
     const durationMs = duration * 1000
     const end = Date.now() + durationMs
 
-    // Close function from preload
+    // Close function
     function closeMe() {
-      if (window.closeWindow) {
-        window.closeWindow()
-      }
+      ipcRenderer.send('close-celebration')
     }
 
     // Different celebration styles
@@ -51,6 +64,8 @@
       const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#fd79a8', '#a29bfe']
 
       function frame() {
+        if (Date.now() > end) return
+
         confetti({
           particleCount: 3,
           angle: 60,
@@ -138,28 +153,19 @@
       }, 400)
     }
 
-    // Wait for confetti to load then run
-    function startCelebration() {
-      if (typeof confetti === 'undefined') {
-        setTimeout(startCelebration, 100)
-        return
-      }
-
-      switch(style) {
-        case 'fireworks':
-          fireworksStyle()
-          break
-        case 'stars':
-          starsStyle()
-          break
-        case 'confetti':
-        default:
-          confettiStyle()
-          break
-      }
+    // Start celebration
+    switch(style) {
+      case 'fireworks':
+        fireworksStyle()
+        break
+      case 'stars':
+        starsStyle()
+        break
+      case 'confetti':
+      default:
+        confettiStyle()
+        break
     }
-
-    startCelebration()
 
     // Close window after duration
     setTimeout(closeMe, durationMs + 500)
