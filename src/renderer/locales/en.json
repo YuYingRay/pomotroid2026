@@ -1,0 +1,105 @@
+{
+  "app": {
+    "name": "Pomotroid"
+  },
+  "titlebar": {
+    "settings": "Settings"
+  },
+  "timer": {
+    "work": "Focus",
+    "shortBreak": "Short Break",
+    "longBreak": "Long Break",
+    "start": "Start",
+    "pause": "Pause",
+    "skip": "Skip",
+    "reset": "Reset"
+  },
+  "drawer": {
+    "timer": "Timer",
+    "settings": "Settings",
+    "themes": "Themes"
+  },
+  "settings": {
+    "title": "Settings",
+    "alwaysOnTop": "Always On Top",
+    "deactivateOnBreaks": "Deactivate Always On Top on Breaks",
+    "autoStartWork": "Auto-start Work Timer",
+    "autoStartBreak": "Auto-start Break Timer",
+    "tickSoundsWork": "Tick Sounds - Work",
+    "tickSoundsBreak": "Tick Sounds - Break",
+    "notifications": "Desktop Notifications",
+    "minToTray": "Minimize to Tray",
+    "minToTrayOnClose": "Minimize to Tray on Close",
+    "globalShortcuts": "Global Shortcuts",
+    "toggleTimer": "Toggle Timer",
+    "resetTimer": "Reset Timer",
+    "skipRound": "Skip Round",
+    "celebration": "Celebration Effects",
+    "celebrationEnabled": "Enable Celebration",
+    "celebrationTrigger": "Trigger On",
+    "celebrationTriggerWork": "Work Complete",
+    "celebrationTriggerBreak": "Break Complete",
+    "celebrationTriggerAll": "All Rounds",
+    "celebrationTriggerCycle": "Full Cycle",
+    "celebrationDuration": "Duration (seconds)",
+    "celebrationStyle": "Effect Style",
+    "celebrationStyleConfetti": "Confetti",
+    "celebrationStyleFireworks": "Fireworks",
+    "celebrationStyleStars": "Stars"
+  },
+  "timerSettings": {
+    "title": "Timer",
+    "focusTime": "Focus",
+    "shortBreakTime": "Short Break",
+    "longBreakTime": "Long Break",
+    "rounds": "Rounds",
+    "minutes": "min",
+    "resetDefaults": "Reset Defaults"
+  },
+  "themes": {
+    "title": "Themes",
+    "Andromeda": "Andromeda",
+    "Ayu": "Ayu",
+    "City Lights": "City Lights",
+    "Dracula": "Dracula",
+    "D_Va": "D.Va",
+    "GitHub": "GitHub",
+    "Graphite": "Graphite",
+    "Gruvbox": "Gruvbox",
+    "Monokai": "Monokai",
+    "Nord": "Nord",
+    "One Dark": "One Dark",
+    "Pomotroid": "Pomotroid",
+    "Popping and Locking": "Popping and Locking",
+    "Solarized Light": "Solarized Light",
+    "Spandex": "Spandex",
+    "Synthwave": "Synthwave",
+    "Tokyo Night": "Tokyo Night"
+  },
+  "notifications": {
+    "focusComplete": "Focus Round Complete",
+    "breakFinished": "Break Finished",
+    "longBreakMessage": "Begin a {minutes} minute long break.",
+    "shortBreakMessage": "Begin a {minutes} minute short break.",
+    "workMessage": "Begin focusing for {minutes} minutes."
+  },
+  "tray": {
+    "view": "View",
+    "exit": "Exit"
+  },
+  "language": {
+    "title": "Language",
+    "select": "Select Language",
+    "en": "English",
+    "zhCN": "简体中文"
+  },
+  "celebration": {
+    "clickToClose": "Click anywhere or press ESC to close"
+  },
+  "about": {
+    "title": "About",
+    "version": "Version",
+    "releaseNotes": "release notes",
+    "licenseAndDocs": "License and Documentation"
+  }
+}

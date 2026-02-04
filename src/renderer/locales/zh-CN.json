@@ -1,0 +1,105 @@
+{
+  "app": {
+    "name": "番茄时钟"
+  },
+  "titlebar": {
+    "settings": "设置"
+  },
+  "timer": {
+    "work": "专注",
+    "shortBreak": "短休息",
+    "longBreak": "长休息",
+    "start": "开始",
+    "pause": "暂停",
+    "skip": "跳过",
+    "reset": "重置"
+  },
+  "drawer": {
+    "timer": "计时器",
+    "settings": "设置",
+    "themes": "主题"
+  },
+  "settings": {
+    "title": "设置",
+    "alwaysOnTop": "窗口置顶",
+    "deactivateOnBreaks": "休息时取消置顶",
+    "autoStartWork": "自动开始工作计时",
+    "autoStartBreak": "自动开始休息计时",
+    "tickSoundsWork": "工作时滴答声",
+    "tickSoundsBreak": "休息时滴答声",
+    "notifications": "桌面通知",
+    "minToTray": "最小化到托盘",
+    "minToTrayOnClose": "关闭时最小化到托盘",
+    "globalShortcuts": "全局快捷键",
+    "toggleTimer": "开始/暂停",
+    "resetTimer": "重置计时",
+    "skipRound": "跳过当前",
+    "celebration": "庆祝效果",
+    "celebrationEnabled": "启用庆祝效果",
+    "celebrationTrigger": "触发时机",
+    "celebrationTriggerWork": "工作完成时",
+    "celebrationTriggerBreak": "休息完成时",
+    "celebrationTriggerAll": "每次完成时",
+    "celebrationTriggerCycle": "完成一轮时",
+    "celebrationDuration": "持续时间（秒）",
+    "celebrationStyle": "效果样式",
+    "celebrationStyleConfetti": "彩色纸屑",
+    "celebrationStyleFireworks": "烟花",
+    "celebrationStyleStars": "星星"
+  },
+  "timerSettings": {
+    "title": "计时器",
+    "focusTime": "专注时间",
+    "shortBreakTime": "短休息",
+    "longBreakTime": "长休息",
+    "rounds": "轮数",
+    "minutes": "分钟",
+    "resetDefaults": "重置默认"
+  },
+  "themes": {
+    "title": "主题",
+    "Andromeda": "仙女座",
+    "Ayu": "鲇鱼",
+    "City Lights": "城市灯光",
+    "Dracula": "德古拉",
+    "D_Va": "D.Va",
+    "GitHub": "GitHub",
+    "Graphite": "石墨",
+    "Gruvbox": "复古盒子",
+    "Monokai": "莫诺凯",
+    "Nord": "北欧",
+    "One Dark": "暗黑",
+    "Pomotroid": "番茄钟",
+    "Popping and Locking": "流行锁定",
+    "Solarized Light": "日光浅色",
+    "Spandex": "弹力",
+    "Synthwave": "合成波",
+    "Tokyo Night": "东京之夜"
+  },
+  "notifications": {
+    "focusComplete": "专注时间结束",
+    "breakFinished": "休息结束",
+    "longBreakMessage": "开始 {minutes} 分钟的长休息吧。",
+    "shortBreakMessage": "开始 {minutes} 分钟的短休息吧。",
+    "workMessage": "开始 {minutes} 分钟的专注时间。"
+  },
+  "tray": {
+    "view": "显示",
+    "exit": "退出"
+  },
+  "language": {
+    "title": "语言",
+    "select": "选择语言",
+    "en": "English",
+    "zhCN": "简体中文"
+  },
+  "celebration": {
+    "clickToClose": "点击任意位置或按 ESC 关闭"
+  },
+  "about": {
+    "title": "关于",
+    "version": "版本",
+    "releaseNotes": "更新日志",
+    "licenseAndDocs": "许可证和文档"
+  }
+}

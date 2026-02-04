@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pomotroid 语言切换位置 - 交互式选择</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      padding: 40px;
+      color: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 300;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 40px;
+    }
+
+    .comparison {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .option {
+      text-align: center;
+    }
+
+    .option h2 {
+      margin-bottom: 20px;
+      font-weight: 400;
+      color: #aaa;
+    }
+
+    .option h2 span {
+      background: #ff6b6b;
+      color: white;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+
+    /* Pomotroid 窗口模拟 */
+    .pomotroid-window {
+      width: 360px;
+      height: 478px;
+      background: #2F384B;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    /* 标题栏 */
+    .titlebar {
+      height: 32px;
+      background: #252d3a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      -webkit-app-region: drag;
+    }
+
+    .titlebar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .titlebar-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .titlebar-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-close { background: #ff5f57; }
+    .btn-minimize { background: #ffbd2e; }
+    .btn-maximize { background: #28ca42; }
+
+    .titlebar-title {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .titlebar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .titlebar-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .titlebar-icon:hover {
+      color: #fff;
+    }
+
+    /* 语言切换按钮 - 标题栏版本 */
+    .lang-switch-titlebar {
+      background: #3a4556;
+      border: none;
+      border-radius: 4px;
+      padding: 2px 8px;
+      color: #fff;
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .lang-switch-titlebar:hover {
+      background: #4a5566;
+    }
+
+    .lang-switch-titlebar .flag {
+      font-size: 14px;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    .timer-display {
+      font-size: 72px;
+      font-weight: 200;
+      color: #fff;
+      margin-bottom: 20px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .round-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 30px;
+    }
+
+    .round-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #3a4556;
+    }
+
+    .round-dot.active {
+      background: #ff6b6b;
+    }
+
+    .round-dot.completed {
+      background: #28ca42;
+    }
+
+    .timer-label {
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    .control-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #ff6b6b;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .control-btn:hover {
+      transform: scale(1.1);
+    }
+
+    /* 设置抽屉 */
+    .drawer {
+      position: absolute;
+      top: 32px;
+      right: 0;
+      width: 280px;
+      height: calc(100% - 32px);
+      background: #252d3a;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #3a4556;
+    }
+
+    .drawer-title {
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .drawer-close {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .setting-group {
+      margin-bottom: 20px;
+    }
+
+    .setting-label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #3a4556;
+    }
+
+    .setting-name {
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .setting-value {
+      font-size: 14px;
+      color: #ff6b6b;
+    }
+
+    /* 语言选择 - 设置抽屉版本 */
+    .lang-select {
+      background: #3a4556;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .lang-select:hover {
+      background: #4a5566;
+    }
+
+    /* 高亮框 */
+    .highlight-box {
+      position: absolute;
+      border: 3px dashed #ff6b6b;
+      border-radius: 8px;
+      pointer-events: none;
+      animation: pulse 1.5s infinite;
+    }
+
+    .highlight-titlebar {
+      top: 4px;
+      right: 80px;
+      width: 70px;
+      height: 24px;
+    }
+
+    .highlight-drawer {
+      top: 175px;
+      right: 10px;
+      width: 260px;
+      height: 50px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* 选择按钮 */
+    .choose-btn {
+      margin-top: 30px;
+      padding: 15px 40px;
+      font-size: 16px;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+      border: none;
+      border-radius: 30px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+    }
+
+    .choose-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255,107,107,0.5);
+    }
+
+    .choose-btn.selected {
+      background: linear-gradient(135deg, #28ca42, #20a536);
+      box-shadow: 0 4px 15px rgba(40,202,66,0.4);
+    }
+
+    /* 优缺点列表 */
+    .pros-cons {
+      margin-top: 20px;
+      text-align: left;
+      background: rgba(255,255,255,0.05);
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .pros-cons h3 {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .pros-cons ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .pros-cons li {
+      padding: 4px 0;
+      color: #ccc;
+    }
+
+    .pros-cons li.pro::before {
+      content: "✓ ";
+      color: #28ca42;
+    }
+
+    .pros-cons li.con::before {
+      content: "✗ ";
+      color: #ff6b6b;
+    }
+
+    /* 结果显示 */
+    .result {
+      text-align: center;
+      margin-top: 50px;
+      padding: 30px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result h2 {
+      color: #28ca42;
+      margin-bottom: 15px;
+    }
+
+    .result p {
+      color: #aaa;
+    }
+
+    /* 交互提示 */
+    .interaction-hint {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 11px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pomotroid 语言切换位置选择</h1>
+  <p class="subtitle">点击窗口进行交互体验，然后选择你喜欢的方案</p>
+
+  <div class="comparison">
+    <!-- 方案 A: 标题栏 -->
+    <div class="option" id="optionA">
+      <h2>方案 A: 标题栏<span>快捷</span></h2>
+      <div class="pomotroid-window" id="windowA">
+        <div class="titlebar">
+          <div class="titlebar-left">
+            <div class="titlebar-buttons">
+              <button class="titlebar-btn btn-close"></button>
+              <button class="titlebar-btn btn-minimize"></button>
+              <button class="titlebar-btn btn-maximize"></button>
+            </div>
+          </div>
+          <div class="titlebar-title">Pomotroid</div>
+          <div class="titlebar-right">
+            <button class="lang-switch-titlebar" id="langBtnA" onclick="toggleLangA()">
+              <span class="flag">🇨🇳</span>
+              <span class="text">中文</span>
+            </button>
+            <div class="titlebar-icon" onclick="toggleDrawerA()">☰</div>
+          </div>
+        </div>
+        <div class="main-content">
+          <div class="timer-display">25:00</div>
+          <div class="round-indicator">
+            <div class="round-dot completed"></div>
+            <div class="round-dot active"></div>
+            <div class="round-dot"></div>
+            <div class="round-dot"></div>
+          </div>
+          <div class="timer-label" id="labelA">专注时间</div>
+          <button class="control-btn">▶</button>
+        </div>
+        <div class="drawer" id="drawerA">
+          <div class="drawer-header">
+            <span class="drawer-title" id="settingsTitleA">设置</span>
+            <button class="drawer-close" onclick="toggleDrawerA()">×</button>
+          </div>
+          <div class="setting-group">
+            <div class="setting-label" id="timerLabelA">计时器</div>
+            <div class="setting-row">
+              <span class="setting-name" id="workTimeA">工作时间</span>
+              <span class="setting-value">25 分钟</span>
+            </div>
+            <div class="setting-row">
+              <span class="setting-name" id="shortBreakA">短休息</span>
+              <span class="setting-value">5 分钟</span>
+            </div>
+          </div>
+        </div>
+        <div class="highlight-box highlight-titlebar"></div>
+        <div class="interaction-hint">点击语言按钮切换语言</div>
+      </div>
+      <div class="pros-cons">
+        <h3>特点</h3>
+        <ul>
+          <li class="pro">一键切换，非常便捷</li>
+          <li class="pro">始终可见，易于发现</li>
+          <li class="pro">不需要打开设置</li>
+          <li class="con">占用标题栏空间</li>
+          <li class="con">可能显得界面略杂</li>
+        </ul>
+      </div>
+      <button class="choose-btn" onclick="choose('A')">选择方案 A</button>
+    </div>
+
+    <!-- 方案 B: 设置抽屉 -->
+    <div class="option" id="optionB">
+      <h2>方案 B: 设置抽屉<span>整洁</span></h2>
+      <div class="pomotroid-window" id="windowB">
+        <div class="titlebar">
+          <div class="titlebar-left">
+            <div class="titlebar-buttons">
+              <button class="titlebar-btn btn-close"></button>
+              <button class="titlebar-btn btn-minimize"></button>
+              <button class="titlebar-btn btn-maximize"></button>
+            </div>
+          </div>
+          <div class="titlebar-title">Pomotroid</div>
+          <div class="titlebar-right">
+            <div class="titlebar-icon" onclick="toggleDrawerB()">☰</div>
+          </div>
+        </div>
+        <div class="main-content">
+          <div class="timer-display">25:00</div>
+          <div class="round-indicator">
+            <div class="round-dot completed"></div>
+            <div class="round-dot active"></div>
+            <div class="round-dot"></div>
+            <div class="round-dot"></div>
+          </div>
+          <div class="timer-label" id="labelB">专注时间</div>
+          <button class="control-btn">▶</button>
+        </div>
+        <div class="drawer open" id="drawerB">
+          <div class="drawer-header">
+            <span class="drawer-title" id="settingsTitleB">设置</span>
+            <button class="drawer-close" onclick="toggleDrawerB()">×</button>
+          </div>
+          <div class="setting-group">
+            <div class="setting-label">语言 / Language</div>
+            <div class="setting-row">
+              <span class="setting-name">界面语言</span>
+              <select class="lang-select" id="langSelectB" onchange="changeLangB()">
+                <option value="zh-CN">🇨🇳 简体中文</option>
+                <option value="en">🇺🇸 English</option>
+              </select>
+            </div>
+          </div>
+          <div class="setting-group">
+            <div class="setting-label" id="timerLabelB">计时器</div>
+            <div class="setting-row">
+              <span class="setting-name" id="workTimeB">工作时间</span>
+              <span class="setting-value">25 分钟</span>
+            </div>
+            <div class="setting-row">
+              <span class="setting-name" id="shortBreakB">短休息</span>
+              <span class="setting-value">5 分钟</span>
+            </div>
+          </div>
+        </div>
+        <div class="highlight-box highlight-drawer"></div>
+        <div class="interaction-hint">在设置中选择语言</div>
+      </div>
+      <div class="pros-cons">
+        <h3>特点</h3>
+        <ul>
+          <li class="pro">界面简洁，不添加额外元素</li>
+          <li class="pro">与其他设置统一管理</li>
+          <li class="pro">符合大多数应用的习惯</li>
+          <li class="con">需要打开设置才能切换</li>
+          <li class="con">首次使用可能不易发现</li>
+        </ul>
+      </div>
+      <button class="choose-btn" onclick="choose('B')">选择方案 B</button>
+    </div>
+  </div>
+
+  <div class="result" id="result">
+    <h2>🎉 你选择了方案 <span id="chosenOption"></span></h2>
+    <p>请将你的选择告诉我，我将按此方案实现语言切换功能。</p>
+  </div>
+
+  <script>
+    let langA = 'zh';
+    let langB = 'zh';
+
+    const textsZh = {
+      label: '专注时间',
+      settings: '设置',
+      timer: '计时器',
+      workTime: '工作时间',
+      shortBreak: '短休息'
+    };
+
+    const textsEn = {
+      label: 'Focus',
+      settings: 'Settings',
+      timer: 'Timer',
+      workTime: 'Work Time',
+      shortBreak: 'Short Break'
+    };
+
+    function toggleLangA() {
+      langA = langA === 'zh' ? 'en' : 'zh';
+      const btn = document.getElementById('langBtnA');
+      const texts = langA === 'zh' ? textsZh : textsEn;
+
+      btn.innerHTML = langA === 'zh'
+        ? '<span class="flag">🇨🇳</span><span class="text">中文</span>'
+        : '<span class="flag">🇺🇸</span><span class="text">EN</span>';
+
+      document.getElementById('labelA').textContent = texts.label;
+      document.getElementById('settingsTitleA').textContent = texts.settings;
+      document.getElementById('timerLabelA').textContent = texts.timer;
+      document.getElementById('workTimeA').textContent = texts.workTime;
+      document.getElementById('shortBreakA').textContent = texts.shortBreak;
+    }
+
+    function changeLangB() {
+      const select = document.getElementById('langSelectB');
+      langB = select.value === 'zh-CN' ? 'zh' : 'en';
+      const texts = langB === 'zh' ? textsZh : textsEn;
+
+      document.getElementById('labelB').textContent = texts.label;
+      document.getElementById('settingsTitleB').textContent = texts.settings;
+      document.getElementById('timerLabelB').textContent = texts.timer;
+      document.getElementById('workTimeB').textContent = texts.workTime;
+      document.getElementById('shortBreakB').textContent = texts.shortBreak;
+    }
+
+    function toggleDrawerA() {
+      document.getElementById('drawerA').classList.toggle('open');
+    }
+
+    function toggleDrawerB() {
+      document.getElementById('drawerB').classList.toggle('open');
+    }
+
+    function choose(option) {
+      document.querySelectorAll('.choose-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        btn.textContent = btn.textContent.replace('✓ 已选择', '选择');
+      });
+
+      const btn = document.querySelector(`#option${option} .choose-btn`);
+      btn.classList.add('selected');
+      btn.textContent = `✓ 已选择方案 ${option}`;
+
+      document.getElementById('chosenOption').textContent = option;
+      document.getElementById('result').classList.add('show');
+
+      // Scroll to result
+      document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

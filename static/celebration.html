@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net">
+  <title>Celebration</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      cursor: pointer;
+    }
+    #click-overlay {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.001);
+    }
+  </style>
+</head>
+<body>
+  <div id="click-overlay"></div>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script>
+    // Get celebration options from query params
+    const urlParams = new URLSearchParams(window.location.search)
+    const duration = parseInt(urlParams.get('duration')) || 5
+    const style = urlParams.get('style') || 'confetti'
+
+    const durationMs = duration * 1000
+    const end = Date.now() + durationMs
+
+    // Close function from preload
+    function closeMe() {
+      if (window.closeWindow) {
+        window.closeWindow()
+      }
+    }
+
+    // Different celebration styles
+    function confettiStyle() {
+      const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#fd79a8', '#a29bfe']
+
+      function frame() {
+        confetti({
+          particleCount: 3,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: colors
+        })
+        confetti({
+          particleCount: 3,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: colors
+        })
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame)
+        }
+      }
+      frame()
+    }
+
+    function fireworksStyle() {
+      const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6fff']
+
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min
+      }
+
+      const interval = setInterval(function() {
+        const timeLeft = end - Date.now()
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval)
+        }
+
+        confetti({
+          particleCount: randomInRange(50, 100),
+          spread: randomInRange(50, 70),
+          origin: {
+            x: randomInRange(0.1, 0.9),
+            y: randomInRange(0.1, 0.5)
+          },
+          colors: colors,
+          ticks: 200,
+          gravity: 1.2,
+          scalar: 1.2,
+          drift: randomInRange(-0.5, 0.5)
+        })
+      }, 300)
+    }
+
+    function starsStyle() {
+      const defaults = {
+        spread: 360,
+        ticks: 100,
+        gravity: 0,
+        decay: 0.94,
+        startVelocity: 30,
+        shapes: ['star'],
+        colors: ['#FFE400', '#FFBD00', '#E89400', '#FFCA6C', '#FDFFB8']
+      }
+
+      function shoot() {
+        confetti({
+          ...defaults,
+          particleCount: 40,
+          scalar: 1.2,
+          shapes: ['star']
+        })
+
+        confetti({
+          ...defaults,
+          particleCount: 10,
+          scalar: 0.75,
+          shapes: ['circle']
+        })
+      }
+
+      const interval = setInterval(function() {
+        if (Date.now() > end) {
+          return clearInterval(interval)
+        }
+        shoot()
+      }, 400)
+    }
+
+    // Wait for confetti to load then run
+    function startCelebration() {
+      if (typeof confetti === 'undefined') {
+        setTimeout(startCelebration, 100)
+        return
+      }
+
+      switch(style) {
+        case 'fireworks':
+          fireworksStyle()
+          break
+        case 'stars':
+          starsStyle()
+          break
+        case 'confetti':
+        default:
+          confettiStyle()
+          break
+      }
+    }
+
+    startCelebration()
+
+    // Close window after duration
+    setTimeout(closeMe, durationMs + 500)
+
+    // Click anywhere to close
+    document.getElementById('click-overlay').addEventListener('click', closeMe)
+    document.body.addEventListener('click', closeMe)
+
+    // ESC key to close
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        closeMe()
+      }
+    })
+
+    // Focus window to receive keyboard events
+    window.focus()
+  </script>
+</body>
+</html>
