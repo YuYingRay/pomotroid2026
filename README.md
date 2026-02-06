@@ -15,10 +15,12 @@
 
 - [Overview](#overview)
 - [Features](#features)
-  - [New in v0.13.1](#new-in-v0131)
+  - [New in v0.14.0](#new-in-v0140)
   - [Themes](#themes)
 - [Install](#install)
-  - [Download](#download)
+  - [Windows](#windows)
+  - [macOS](#macos)
+  - [Linux](#linux)
 - [Development](#development)
   - [Build Setup](#build-setup)
 - [License](#license)
@@ -38,7 +40,7 @@ This is an enhanced fork with Chinese language support and celebration effects.
 - Several themes included with the ability to create custom themes
 - Timer activity logging
 
-### New in v0.13.1
+### New in v0.14.0
 
 - **🌐 Multi-language Support**: Switch between English and Simplified Chinese
   - Language switcher in titlebar
@@ -62,18 +64,52 @@ Visit the [theme documentation](./docs/themes/themes.md) to view the full list o
 
 ## Install
 
-### Download
-
 Download the latest version from the [releases](https://github.com/YuYingRay/pomotroid2026/releases) page.
 
-- **Setup installer**: `pomotroid-x.x.x-setup.exe` - Standard Windows installer
-- **Portable version**: `pomotroid-x.x.x-portable.exe` - No installation required
+### Windows
+
+1. Download `pomotroid-x.x.x-setup.exe` (installer) or `pomotroid-x.x.x-portable.exe` (portable)
+2. Run the installer or portable executable
+3. If Windows SmartScreen shows a warning, click "More info" then "Run anyway"
+
+### macOS
+
+1. Download `pomotroid-x.x.x-macos-arm64.zip` (Apple Silicon M1/M2/M3) or `pomotroid-x.x.x-macos-x64.zip` (Intel)
+2. Unzip the file to get `Pomotroid.app`
+3. Move `Pomotroid.app` to the `/Applications` folder
+4. **Important**: Since the app is not signed with an Apple Developer certificate, you need to remove the quarantine attribute:
+
+   Open Terminal and run:
+   ```bash
+   sudo xattr -rd com.apple.quarantine /Applications/Pomotroid.app
+   ```
+   Enter your password when prompted.
+
+5. Now you can open Pomotroid from the Applications folder
+
+> **Note**: This is a standard procedure for unsigned open-source applications on macOS. The `xattr` command removes the quarantine flag that macOS adds to downloaded files.
+
+### Linux
+
+1. Download one of the following:
+   - `pomotroid-x.x.x-linux.AppImage` - Universal format, works on most distributions
+   - `pomotroid-x.x.x-linux.deb` - For Debian/Ubuntu-based distributions
+   - `pomotroid-x.x.x-linux.tar.gz` - Compressed archive
+
+2. For AppImage:
+   ```bash
+   chmod +x pomotroid-x.x.x-linux.AppImage
+   ./pomotroid-x.x.x-linux.AppImage
+   ```
+
+3. For .deb:
+   ```bash
+   sudo dpkg -i pomotroid-x.x.x-linux.deb
+   ```
 
 ## Development
 
 Pomotroid is built with [Vue.js](https://github.com/vuejs/vue), [Electron](https://github.com/electron/electron), and [electron-vue](https://github.com/SimulatedGREG/electron-vue).
-
-_Note: depending on your OS settings, you may receive a security warning upon installation. This has to do with Pomotroid being an unsigned application._
 
 ### Build Setup
 
