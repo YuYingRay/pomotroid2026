@@ -64,6 +64,10 @@
     "nsis": {
       "artifactName": "pomotroid-${version}-setup.${ext}"
     },
+    "win": {
+      "icon": "./static/icon.png",
+      "target": ["nsis", "portable"]
+    },
     "portable": {
       "artifactName": "pomotroid-${version}-portable.${ext}"
     },
