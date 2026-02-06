@@ -37,6 +37,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Setup Windows build tools
+        if: matrix.os == 'windows-latest'
+        run: npm install --global windows-build-tools --vs2015 || true
+        continue-on-error: true
+
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
@@ -46,7 +51,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
-          PYTHON_PATH: python3
 
       - name: Build Electron app (Windows)
         if: matrix.os == 'windows-latest'
